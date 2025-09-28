@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Interactive Employee Management</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #232526, #414345);
+      color: #fff;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #ffd369;
+    }
+    .container {
+      max-width: 700px;
+      margin: auto;
+      background: rgba(0,0,0,0.5);
+      padding: 20px;
+      border-radius: 12px;
+    }
+    input, button {
+      padding: 10px;
+      margin: 5px;
+      border: none;
+      border-radius: 6px;
+    }
+    input {
+      width: calc(30% - 12px);
+    }
+    button {
+      background: #ff7eb3;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #ff4e9b;
+    }
+    table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+    th {
+      background: #ff7eb3;
+      color: white;
+    }
+    tr:nth-child(even) {
+      background: rgba(255,255,255,0.1);
+    }
+    .actions button {
+      margin: 2px;
+      padding: 6px 12px;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Employee Management System</h1>
+  <div class="container">
+    <h3>Add Employee</h3>
+    <input type="text" id="empId" placeholder="Employee ID">
+    <input type="text" id="empName" placeholder="Name">
+    <input type="text" id="empRole" placeholder="Role">
+    <button onclick="addEmployee()">Add Employee</button>
+
+    <h3>Employee List</h3>
+    <table id="empTable">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Role</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script>
+    let employees = [];
+
+    function renderTable() {
+      const tbody = document.querySelector("#empTable tbody");
+      tbody.innerHTML = "";
+      employees.forEach((emp, i) => {
+        const row = `<tr>
+          <td>${emp.id}</td>
+          <td>${emp.name}</td>
+          <td>${emp.role}</td>
+          <td class="actions">
+            <button onclick="editEmployee(${i})">Edit</button>
+            <button onclick="deleteEmployee(${i})">Delete</button>
+          </td>
+        </tr>`;
+        tbody.innerHTML += row;
+      });
+    }
+
+    function addEmployee() {
+      const id = document.getElementById("empId").value.trim();
+      const name = document.getElementById("empName").value.trim();
+      const role = document.getElementById("empRole").value.trim();
+
+      if (!id || !name || !role) {
+        alert("Please fill all fields!");
+        return;
+      }
+
+      employees.push({ id, name, role });
+      document.getElementById("empId").value = "";
+      document.getElementById("empName").value = "";
+      document.getElementById("empRole").value = "";
+      renderTable();
+    }
+
+    function deleteEmployee(index) {
+      if (confirm("Are you sure you want to delete this employee?")) {
+        employees.splice(index, 1);
+        renderTable();
+      }
+    }
+
+    function editEmployee(index) {
+      const emp = employees[index];
+      const newName = prompt("Edit Name:", emp.name);
+      const newRole = prompt("Edit Role:", emp.role);
+
+      if (newName && newRole) {
+        employees[index].name = newName;
+        employees[index].role = newRole;
+        renderTable();
+      }
+    }
+
+    renderTable();
+  </script>
+</body>
+</html>
+
